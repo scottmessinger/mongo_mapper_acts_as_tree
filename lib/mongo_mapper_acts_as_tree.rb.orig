@@ -29,9 +29,12 @@ module MongoMapper
           key path_field,       Array,  :default => [], :index => true
           key depth_field,      Integer, :default => 0
           
+<<<<<<< HEAD
           # many :children, :class => self.class, :foreign_key => parent_id_field
 
           
+=======
+>>>>>>> 6c93c75b31ec11cb6d9955cb45d71c81105eea3d
           after_save      :move_children
           validate        :will_save_tree
           before_destroy  :destroy_descendants
@@ -52,7 +55,11 @@ module MongoMapper
         end
       
         def parent=(var)
+<<<<<<< HEAD
+          var = self.class.find(var) if var.is_a? String
+=======
           var = search_class.find(var) if var.is_a? String
+>>>>>>> 6c93c75b31ec11cb6d9955cb45d71c81105eea3d
           
           if self.descendants.include? var
             @_cyclic = true
@@ -82,7 +89,11 @@ module MongoMapper
         end
         
         def parent
+<<<<<<< HEAD
+          @_parent or (self[parent_id_field].nil? ? nil : self.class.find(self[parent_id_field]))
+=======
           @_parent or (self[parent_id_field].nil? ? nil : search_class.find(self[parent_id_field]))
+>>>>>>> 6c93c75b31ec11cb6d9955cb45d71c81105eea3d
         end
         
         def root?
@@ -90,12 +101,20 @@ module MongoMapper
         end
         
         def root
+<<<<<<< HEAD
+          self[path_field].first.nil? ? self : self.class.find(self[path_field].first)
+=======
           self[path_field].first.nil? ? self : search_class.find(self[path_field].first)
+>>>>>>> 6c93c75b31ec11cb6d9955cb45d71c81105eea3d
         end
         
         def ancestors
           return [] if root?
+<<<<<<< HEAD
+          self.class.find(self[path_field])
+=======
           search_class.find(self[path_field])
+>>>>>>> 6c93c75b31ec11cb6d9955cb45d71c81105eea3d
         end
         
         def self_and_ancestors
@@ -103,6 +122,17 @@ module MongoMapper
         end
         
         def siblings
+<<<<<<< HEAD
+          self.class.all(:_id => {"$ne" => self._id}, parent_id_field => self[parent_id_field], :order => tree_order)
+        end
+        
+        def self_and_siblings
+          self.class.all(parent_id_field => self[parent_id_field], :order => tree_order)
+        end
+        
+        def children
+          self.class.all(parent_id_field => self._id, :order => tree_order)
+=======
           search_class.all(:_id => {"$ne" => self._id}, parent_id_field => self[parent_id_field], :order => tree_order)
         end
         
@@ -112,11 +142,16 @@ module MongoMapper
         
         def children
           search_class.all(parent_id_field => self._id, :order => tree_order)
+>>>>>>> 6c93c75b31ec11cb6d9955cb45d71c81105eea3d
         end
         
         def descendants
           return [] if new_record?
+<<<<<<< HEAD
+          self.class.all(path_field => self._id, :order => tree_order)
+=======
           search_class.all(path_field => self._id, :order => tree_order)
+>>>>>>> 6c93c75b31ec11cb6d9955cb45d71c81105eea3d
         end
         
         def self_and_descendants
@@ -159,7 +194,11 @@ module MongoMapper
         end
         
         def destroy_descendants
+<<<<<<< HEAD
+          self.class.destroy(self.descendants.map(&:_id))
+=======
           search_class.destroy(self.descendants.map(&:_id))
+>>>>>>> 6c93c75b31ec11cb6d9955cb45d71c81105eea3d
         end
       end
       
@@ -179,6 +218,8 @@ module MongoMapper
         def tree_order
           acts_as_tree_options[:order] or ""
         end
+<<<<<<< HEAD
+=======
         
         # When added as an option to acts_as_tree, search class will be used as the base from which to
         # find tree objects. This is handy should you have a tree of objects that are of different types, but
@@ -194,6 +235,7 @@ module MongoMapper
         def search_class
           acts_as_tree_options[:search_class] or self.class
         end
+>>>>>>> 6c93c75b31ec11cb6d9955cb45d71c81105eea3d
       end
     end
   end
