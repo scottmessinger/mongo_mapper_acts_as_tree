@@ -29,6 +29,9 @@ module MongoMapper
           key path_field,       Array,  :default => [], :index => true
           key depth_field,      Integer, :default => 0
           
+          # many :children, :class => self.class, :foreign_key => parent_id_field
+
+          
           after_save      :move_children
           validate        :will_save_tree
           before_destroy  :destroy_descendants
